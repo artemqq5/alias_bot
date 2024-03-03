@@ -24,7 +24,7 @@ async def start(message: types.Message):
 
         invite_link = await bot.get_chat(message.chat.id)
 
-        if await ChatRepository().add_chat(message.chat.id, message.chat.title, invite_link['invite_link']):
+        if ChatRepository().add_chat(message.chat.id, message.chat.title, invite_link['invite_link']):
             await message.answer("Група була додана успішно")
         else:
             await message.answer("Виникла помилка. Можливо група вже додана")
@@ -41,7 +41,7 @@ async def start(message: types.Message):
 @dispatcher.message_handler(commands=['question'])
 async def question(message: types.Message):
     if message.chat.type in [types.ChatType.GROUP, types.ChatType.SUPER_GROUP]:
-        if await ChatRepository().is_exists(message.chat.id):
+        if ChatRepository().is_exists(message.chat.id):
             await message.answer(random.choice(LIST_OF_QUESTION))
         else:
             await message.answer("Група ще не додана, напишіть /start")
