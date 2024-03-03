@@ -18,7 +18,7 @@ bot = Bot(token=BOT_TOKEN, parse_mode=ParseMode.HTML)
 dispatcher = Dispatcher(bot, storage=storage)
 
 
-@dispatcher.message_handler(commands=['/start'])
+@dispatcher.message_handler(commands=['start'])
 async def start(message: types.Message):
     if message.chat.type in [types.ChatType.GROUP, types.ChatType.SUPER_GROUP]:
 
@@ -38,7 +38,7 @@ async def start(message: types.Message):
         )
 
 
-@dispatcher.message_handler(commands=['/question'])
+@dispatcher.message_handler(commands=['question'])
 async def question(message: types.Message):
     if message.chat.type in [types.ChatType.GROUP, types.ChatType.SUPER_GROUP]:
         if await ChatRepository().is_exists(message.chat.id):
