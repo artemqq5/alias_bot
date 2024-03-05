@@ -9,7 +9,7 @@ class UpdateUsage(UserRepository):
         if UserRepository()._is_user_exist(user_id):
             if not UserRepository()._is_admin_exist(user_id):
                 last_update = self._last_update(user_id)['last_update']
-                if last_update is not None and last_update + timedelta(minutes=3) > datetime.now():
+                if last_update is None or last_update + timedelta(minutes=3) > datetime.now():
                     print("can do update")
                 else:
                     print("can't do update. Wait for 3 minutes")
