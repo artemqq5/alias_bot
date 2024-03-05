@@ -12,7 +12,7 @@ class UserRepository(DefaultDataBase):
         return self._select(COMMAND_, (user_id,))
 
     def _add_user(self, user_id, username, first_name, last_name):
-        COMMAND_ = '''insert into `users`(`user_id`, `username`, `first_name`, `last_name`) values (%s, %s, %s, %s);'''
+        COMMAND_ = '''insert into `users` values (%s, %s, %s, %s);'''
         return self._insert(COMMAND_, (user_id, username, first_name, last_name))
 
     def _last_update(self, user_id):
