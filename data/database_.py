@@ -28,7 +28,8 @@ class DefaultDataBase:
         try:
             with self._connection as con:
                 with con.cursor() as cursor:
-                    return cursor.execute(query, args)
+                    cursor.execute(query, args)
+                    return True
         except Exception as e:
             print(f"_update: {e}")
 
