@@ -15,6 +15,10 @@ class UserRepository(DefaultDataBase):
         COMMAND_ = '''insert into `users` values (%s, %s, %s, %s);'''
         return self._insert(COMMAND_, (user_id, username, first_name, last_name))
 
-    def _last_update(self, user_id):
+    def _get_last_update(self, user_id):
         COMMAND_ = '''select `last_update` from `users` where `user_id` = %s;'''
         return self._select_one(COMMAND_, (user_id,))
+
+    def _set_last_update(self, user_id, last_update):
+        COMMAND_ = '''update `users` set `last_update` = %s where `user_id` = %s;'''
+        return self._update(COMMAND_, (last_update, user_id))

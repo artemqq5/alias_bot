@@ -8,8 +8,9 @@ class UpdateUsage(UserRepository):
     def access_update_actually(self, user_id):
         if UserRepository()._is_user_exist(user_id):
             if not UserRepository()._is_admin_exist(user_id):
-                last_update = self._last_update(user_id)['last_update']
+                last_update = self._get_last_update(user_id)['last_update']
                 if last_update is None or last_update + timedelta(minutes=3) > datetime.now():
+                    self._set_last_update(user_id, datetime.now())
                     print("can do update")
                 else:
                     print("can't do update. Wait for 3 minutes")
@@ -18,4 +19,3 @@ class UpdateUsage(UserRepository):
                 print("update immediately")
         else:
             print("You are not registered to get update. Input /start and register automatically")
-
