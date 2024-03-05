@@ -48,3 +48,12 @@ class DefaultDataBase:
                     return cursor.fetchall()
         except Exception as e:
             print(f"_select_all: {e}")
+
+    def _select_one(self, query, args=None):
+        try:
+            with self._connection as con:
+                with con.cursor() as cursor:
+                    cursor.execute(query, args)
+                    return cursor.fetchone()
+        except Exception as e:
+            print(f"_select_all: {e}")
