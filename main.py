@@ -1,14 +1,13 @@
 import logging
-import random
 
 from aiogram import Bot, Dispatcher, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
-from aiogram.types import ParseMode, ReplyKeyboardRemove
+from aiogram.types import ParseMode
 from aiogram.utils import executor
 
 from data.config import BOT_TOKEN
-from data.repopsitory.chats_ import ChatRepository
-from quetions import LIST_OF_QUESTION
+from data.repopsitory.users_ import UserRepository
+from domain.update import UpdateUsage
 
 logging.basicConfig(level=logging.INFO)
 
@@ -20,31 +19,19 @@ dispatcher = Dispatcher(bot, storage=storage)
 
 @dispatcher.message_handler(commands=['start'])
 async def start(message: types.Message):
-    if message.chat.type in [types.ChatType.GROUP, types.ChatType.SUPER_GROUP]:
-
-        invite_link = await bot.get_chat(message.chat.id)
-
-        if ChatRepository().add_chat(message.chat.id, message.chat.title, invite_link['invite_link']):
-            await message.answer("Група була додана успішно")
+    if UserRepository()._is_user_exist(message.chat.id):
+        await message.answer("Bot already started. You already get bitcoin update")
+    else:
+        if UserRepository()._add_user(message.chat.id, message.chat.username, message.chat.first_name,
+                                      message.chat.last_name):
+            await message.answer("You succesfully have started bot. You will get bitcoin update!")
         else:
-            await message.answer("Виникла помилка. Можливо група вже додана")
-
-    elif message.chat.type in [types.ChatType.PRIVATE, ]:
-        await message.answer(
-            "<b>Привіт, це бот для гри в Alias</b>\n\n"
-            "Додайте до групи цього бота як адміна та введіть команду /start\n\n"
-            "Потім для генерації питань вводьте команду /question",
-            reply_markup=ReplyKeyboardRemove()
-        )
+            await message.answer("Was some exception when you have started bot. Try again later")
 
 
-@dispatcher.message_handler(commands=['question'])
-async def question(message: types.Message):
-    if message.chat.type in [types.ChatType.GROUP, types.ChatType.SUPER_GROUP]:
-        if ChatRepository().is_exists(message.chat.id):
-            await message.answer(random.choice(LIST_OF_QUESTION))
-        else:
-            await message.answer("Група ще не додана, напишіть /start")
+@dispatcher.message_handler(commands=['actually'])
+async def actually(message: types.Message):
+    UpdateUsage().access_update_actually(user_id=message.chat.id)
 
 
 if __name__ == '__main__':
