@@ -56,4 +56,4 @@ class DefaultDataBase:
                     cursor.execute(query, args)
                     return cursor.fetchone()
         except Exception as e:
-            print(f"_select_all: {e}")
+            print(f"_select_one: {e}")
