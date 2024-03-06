@@ -43,7 +43,8 @@ async def start(message: types.Message):
         return
 
     # try register user
-    if not UserRepository()._add_user(message.chat.id, message.chat.username, message.chat.first_name, message.chat.last_name):
+    if not UserRepository()._add_user(message.chat.id, message.chat.username, message.chat.first_name,
+                                      message.chat.last_name):
         await message.answer("Was some exception when you have started bot. Try again later")
         return
 
@@ -63,7 +64,7 @@ async def actually(message: types.Message):
             await message.answer("Chat are not registered to get update. Input /start and register automatically")
             return
 
-        response = UpdateUsage().access_update_actually(user_id=current_chat['id'])
+        response = UpdateUsage().access_update_actually_group(user_id=message.from_user.id, group_id=current_chat['id'])
         await message.answer(response)
         return
 
@@ -72,7 +73,7 @@ async def actually(message: types.Message):
         await message.answer("You are not registered to get update. Input /start and register automatically")
         return
 
-    response = UpdateUsage().access_update_actually(user_id=message.chat.id)
+    response = UpdateUsage().access_update_actually_individual(user_id=message.chat.id)
     await message.answer(response)
     return
 
