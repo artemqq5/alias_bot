@@ -22,3 +22,7 @@ class UserRepository(DefaultDataBase):
     def _set_last_update(self, user_id, last_update):
         COMMAND_ = '''update `users` set `last_update` = %s where `user_id` = %s;'''
         return self._update(COMMAND_, (last_update, user_id))
+
+    def _update_user_access(self, user_id, access):
+        COMMAND_ = '''update `users` set `role` = %s where `user_id` = %s;'''
+        return self._update(COMMAND_, (user_id, access))

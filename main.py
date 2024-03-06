@@ -5,9 +5,10 @@ from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.types import ParseMode
 from aiogram.utils import executor
 
-from data.config import BOT_TOKEN
+from data.config import BOT_TOKEN, USER_ADMIN_ID
 from data.repopsitory.groups_ import GroupRepository
 from data.repopsitory.users_ import UserRepository
+from domain.access import AccessUsage
 from domain.update import UpdateUsage
 
 logging.basicConfig(level=logging.INFO)
@@ -76,6 +77,19 @@ async def actually(message: types.Message):
     response = UpdateUsage().access_update_actually_individual(user_id=message.chat.id)
     await message.answer(response)
     return
+
+
+@dispatcher.message_handler(commands=['access'])
+async def access(message: types.Message):
+    # check user is register
+    user = UserRepository()._is_user_exist(message.chat.id)
+    if not user:
+        await message.answer("You are not registered to get update. Input /start and register automatically")
+        return
+
+    if user['id'] == USER_ADMIN_ID:
+        response = AccessUsage().change_user_access(param=message.text.split(" "))
+        await message.answer(response)
 
 
 if __name__ == '__main__':
