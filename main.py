@@ -23,7 +23,7 @@ async def start(message: types.Message):
     # check if type of chat group or supergroup
     if message.chat.type in [types.ChatType.GROUP, types.ChatType.SUPER_GROUP]:
         current_chat = await bot.get_chat(message.chat.id)
-
+        print(current_chat)
         # check chat is register
         if GroupRepository()._is_group_exist(current_chat['id']):
             await message.answer("Bot already started in this chat. Chat already get bitcoin update")
