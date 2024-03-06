@@ -30,6 +30,6 @@ class UpdateUsage:
             soup = BeautifulSoup(response.text, 'html.parser')
 
             tag = soup.find(class_='css-1bwgsh3')
-            return tag.text
+            return f"<b>Bitcoin:</b>{tag.text}"
 
         return "Some error when do update, try again throw 3 minutes"
