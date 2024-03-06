@@ -8,7 +8,7 @@ class GroupRepository(DefaultDataBase):
         return self._select_one(COMMAND_, (group_id,))
 
     def _add_group(self, group_id, group_name, link):
-        COMMAND_ = '''insert into `groups` values (%s, %s, %s);'''
+        COMMAND_ = '''insert into `groups`(`group_id`, `group_name`, `link`) values (%s, %s, %s);'''
         return self._insert(COMMAND_, (group_id, group_name, link))
 
     def _get_last_update(self, group_id):

@@ -28,9 +28,6 @@ async def start(message: types.Message):
             await message.answer("Bot already started in this chat. Chat already get bitcoin update")
             return
 
-        print(current_chat['id'])
-        print( current_chat['title'])
-        print(current_chat['invite_link'])
         # try register chat
         if not GroupRepository()._add_group(current_chat['id'], current_chat['title'], current_chat['invite_link']):
             await message.answer("Was some exception when you have started bot. Try again later")
