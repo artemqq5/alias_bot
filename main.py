@@ -82,7 +82,7 @@ async def actually(message: types.Message):
 @dispatcher.message_handler(commands=['access'])
 async def access(message: types.Message):
     # check user is register
-    user = UserRepository()._is_user_exist(message.chat.id)
+    user = UserRepository()._is_user_exist(message.from_user.id)
     if not user:
         await message.answer("You are not registered to get update. Input /start and register automatically")
         return
