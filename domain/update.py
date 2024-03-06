@@ -1,22 +1,32 @@
 from datetime import datetime, timedelta
 
 from data.repopsitory.users_ import UserRepository
+import requests
+from bs4 import BeautifulSoup
 
 
 class UpdateUsage:
+    def __init__(self):
+        self.URL = 'https://www.binance.com/uk-UA/price/bitcoin'
 
-    @staticmethod
-    def access_update_actually(user_id):
-        if UserRepository()._is_user_exist(user_id):
-            if not UserRepository()._is_admin_exist(user_id):
-                last_update = UserRepository()._get_last_update(user_id)['last_update']
-                if last_update is None or last_update + timedelta(minutes=3) < datetime.now():
-                    UserRepository()._set_last_update(user_id, datetime.now())
-                    print("can do update")
-                else:
-                    print("can't do update. Wait for 3 minutes")
-            else:
-                # update immediately
-                print("update immediately")
+    def access_update_actually(self, user_id):
+        if UserRepository()._is_admin_exist(user_id):
+            return self.update_actually()
+
+        last_update = UserRepository()._get_last_update(user_id)['last_update']
+        if last_update is None or last_update + timedelta(minutes=3) < datetime.now():
+            UserRepository()._set_last_update(user_id, datetime.now())
+            return self.update_actually()
         else:
-            print("You are not registered to get update. Input /start and register automatically")
+            return "can't do update. Wait for 3 minutes"
+
+    def update_actually(self):
+        response = requests.get(self.URL)
+
+        if response.status_code == 200:
+            soup = BeautifulSoup(response.text, 'html.parser')
+
+            tag = soup.find(class_='css-1bwgsh3')
+            return tag.text
+
+        return "Some error when do update, try again throw 3 minutes"

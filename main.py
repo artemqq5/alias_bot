@@ -19,20 +19,31 @@ dispatcher = Dispatcher(bot, storage=storage)
 
 @dispatcher.message_handler(commands=['start'])
 async def start(message: types.Message):
+    # check user is register
     if UserRepository()._is_user_exist(message.chat.id):
         await message.answer("Bot already started. You already get bitcoin update")
-    else:
-        if UserRepository()._add_user(message.chat.id, message.chat.username, message.chat.first_name,
-                                      message.chat.last_name):
-            await message.answer("You succesfully have started bot. You will get bitcoin update!")
-        else:
-            await message.answer("Was some exception when you have started bot. Try again later")
+        return
+
+    # try register user
+    if not UserRepository()._add_user(message.chat.id, message.chat.username, message.chat.first_name, message.chat.last_name):
+        await message.answer("Was some exception when you have started bot. Try again later")
+        return
+
+    # successfully registered
+    await message.answer("You succesfully have started bot. You will get bitcoin update!")
 
 
 @dispatcher.message_handler(commands=['actually'])
 async def actually(message: types.Message):
-    UpdateUsage().access_update_actually(user_id=message.chat.id)
+    # check user is register
+    if not UserRepository()._is_user_exist(message.chat.id):
+        await message.answer("You are not registered to get update. Input /start and register automatically")
+        return
+
+    response = UpdateUsage().access_update_actually(user_id=message.chat.id)
+    await message.answer(response)
 
 
 if __name__ == '__main__':
     executor.start_polling(dispatcher=dispatcher, skip_updates=True)
+
