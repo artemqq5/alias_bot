@@ -18,8 +18,8 @@ class UpdateUsage:
             UserRepository()._set_last_update(user_id, datetime.now())
             return self.update_actually()
         else:
-            time_to_wait = (datetime.now() - (last_update + timedelta(minutes=3))).strftime('%M:%S')
-            return f"can't do update. Wait {time_to_wait} to update"
+            time_to_wait = (last_update - datetime.now()) + timedelta(minutes=3)
+            return f"can't do update. Wait {time_to_wait.strftime('%M:%S')} to update"
 
     def update_actually(self):
         response = requests.get(self.URL)
