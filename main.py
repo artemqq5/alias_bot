@@ -87,7 +87,7 @@ async def access(message: types.Message):
         await message.answer("You are not registered to get update. Input /start and register automatically")
         return
 
-    if user['id'] == USER_ADMIN_ID:
+    if user['user_id'] == USER_ADMIN_ID:
         response = AccessUsage().change_user_access(param=message.text.split(" "))
         await message.answer(response)
 
