@@ -1,5 +1,4 @@
 import logging
-from datetime import datetime, timedelta
 
 from aiogram import Bot, Dispatcher, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
@@ -26,12 +25,12 @@ async def start(message: types.Message):
         current_chat = await bot.get_chat(message.chat.id)
 
         # check chat is register
-        if GroupRepository()._is_chat_exist(current_chat['id']):
+        if GroupRepository()._is_group_exist(current_chat['id']):
             await message.answer("Bot already started in this chat. Chat already get bitcoin update")
             return
 
         # try register chat
-        if not GroupRepository()._add_chat(current_chat['id'], current_chat['title'], current_chat['invite_link']):
+        if not GroupRepository()._add_group(current_chat['id'], current_chat['title'], current_chat['invite_link']):
             await message.answer("Was some exception when you have started bot. Try again later")
             return
 
@@ -61,7 +60,7 @@ async def actually(message: types.Message):
         current_chat = await bot.get_chat(message.chat.id)
 
         # check chat is register
-        if not GroupRepository()._is_chat_exist(current_chat['id']):
+        if not GroupRepository()._is_group_exist(current_chat['id']):
             await message.answer("Chat are not registered to get update. Input /start and register automatically")
             return
 
