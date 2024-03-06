@@ -9,6 +9,9 @@ class AccessUsage:
         if len(param) != 3:
             return "Wrong params. Try again"
 
+        if not UserRepository()._is_user_exist(param[1]):
+            return "User is not start the bot in private chat"
+
         if UserRepository()._update_user_access(param[1], param[2]):
             return "User has successfully updated"
         else:
